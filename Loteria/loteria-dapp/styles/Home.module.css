@@ -26,6 +26,9 @@
   display: flex;
   justify-content: center;
 }
+.btn{
+  display: flex;
+}
 .main {
   display: flex;
   height: 65vh;
@@ -55,10 +58,42 @@
 .infosm{
   display: flex;
   width: 50%;
+  height: 65vh;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
-
+.infolotto{
+  height: 20vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.infoplayers{
+  height: 20vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.infobote{
+  height: 20vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+/*.infosm div{
+  height: 10vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}*/
 .footer {
   display: flex;
   height: 20vh;
