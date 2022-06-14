@@ -5,6 +5,7 @@ import Header from './components/header'
 import Footer from './components/footer'
 import web3 from 'web3'
 
+
 export default function Home() {
   return (
     <div>
@@ -33,7 +34,7 @@ export default function Home() {
           <section className={styles.infosm}>
             <section className={styles.infolotto}>
               <div>
-                <h3>Historial de loterias</h3>
+                <h4>Historial de loterias</h4>
               </div>
               <section>
                 <p>Ganador #1</p>
@@ -42,7 +43,7 @@ export default function Home() {
             </section>
             <section className={styles.infoplayers}>
               <div>
-                <h3>Jugadores (1)</h3>
+                <h4>Jugadores (1)</h4>
               </div>
               <section>
                 <p>0xf5gdfsdfa83saka</p>
@@ -50,7 +51,7 @@ export default function Home() {
             </section>
             <section className={styles.infobote}>
               <div>
-                <h3>Bote</h3>
+                <h4>Bote</h4>
               </div>
               <section>
                 <p>5 Ether</p>
