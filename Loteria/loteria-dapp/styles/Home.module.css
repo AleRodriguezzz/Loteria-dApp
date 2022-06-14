@@ -26,8 +26,9 @@
   display: flex;
   justify-content: center;
 }
-.btn{
-  display: flex;
+.header div p{
+  font-size: 0.9rem;
+  overflow: hidden;
 }
 .main {
   display: flex;
