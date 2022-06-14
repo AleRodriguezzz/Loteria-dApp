@@ -1,24 +1,29 @@
 import Web3 from 'web3'
 import { useState } from 'react'
 import styles from '../../styles/Home.module.css'
+
 function HeaderComponent(){
+
     const [web3, setWeb3] = useState()
     const [cuentas, setCuentas] = useState()
+    const [loggedIn, setLoggedIn] = useState(false)
+
+
     const connectWalletHandler = async () => {
         if(typeof window !== "undefined" && typeof window.ethereum !== "undefined"){
             try{
                 await window.ethereum.request({method: "eth_requestAccounts"})
                 const web3 = new Web3(window.ethereum)
                 setWeb3(web3)
+                setLoggedIn(true) 
                 const cuentas = await web3.eth.getAccounts()
                 setCuentas(cuentas[0])
-                const btn = document.getElementById('metamaskbtn')
-                btn.style.display = "none"
             }catch(err){
                 console.log(err.message)
             }
         }else{
             console.log("Instale MetaMask")
+            setLoggedIn(false)
         }
     }
     return(
@@ -34,7 +39,8 @@ function HeaderComponent(){
                 </ul>
             </nav>
             <div>
-                <button id='metamaskbtn' onClick={connectWalletHandler}>Conectar Wallet</button>
+                { !loggedIn ? <button onClick={connectWalletHandler}>Conectar Wallet</button>
+                : <p>Bienvenido: {cuentas}</p>}
             </div>
       </header>
     )
