@@ -23,7 +23,6 @@ function HeaderComponent(){
             }
         }else{
             console.log("Instale MetaMask")
-            setLoggedIn(false)
         }
     }
     return(
