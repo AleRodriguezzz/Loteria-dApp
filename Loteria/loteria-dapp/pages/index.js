@@ -4,7 +4,7 @@ import styles from '../styles/Home.module.css'
 import Header from './components/header'
 import Footer from './components/footer'
 import web3 from 'web3'
-import { useState } from 'react'
+import { useState, useEffect} from 'react'
 import localContract from '../blockchain/loteria'
 
 
@@ -13,6 +13,16 @@ export default function Home() {
   const [web3, setWeb3] = useState()
   const [cuentas, setCuentas] = useState()
   const [localContract, setLocalContract] = useState()
+  const [bote, setBote] = useState()
+
+  useEffect(() => {
+    if(localContract) getBote()
+  }, [localContract, bote])
+
+  const getBote = async () => {
+    const bote = await localContract.methods.getBalance().call()
+    setBote(bote)
+  }
 
   return (
     <div>
@@ -61,7 +71,7 @@ export default function Home() {
                 <h4>Bote</h4>
               </div>
               <section>
-                <p>5 Ether</p>
+                <p>{bote}</p>
               </section>
             </section>
           </section>
