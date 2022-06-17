@@ -19,17 +19,28 @@ export default function Home() {
   useEffect(() => {
     if(localContract) getBote()
     if(localContract) getJugadores()
-  }, [localContract, bote, jugadores])
+  }, [localContract])
 
   const getBote = async () => {
     const bote = await localContract.methods.getBalance().call()
-    setBote(bote)
+    setBote(web3.utils.fromWei(bote, 'ether'))
   } 
   const getJugadores = async () => {
     const jugadores = await localContract.methods.getPlayers().call()
     setJugadores(jugadores)
   }
-
+  const comprarBilleteHandler = async () =>{
+    try{
+      await localContract.methods.enter().send({
+        from: cuentas,
+        value: '15000000000000000',
+        gas: 300000,
+        gasPrice: null
+      })
+    }catch(err) {
+      console.log(err.message)
+    }
+  }
   return (
     <div>
       <Head>
@@ -43,7 +54,7 @@ export default function Home() {
           <section className={styles.botonessm}>
             <section className={styles.btn1}>
               <p>Compra un boleto por 0.01 Ether</p>
-              <button>Jugar</button>
+              <button onClick={comprarBilleteHandler}>Jugar</button>
             </section>
             <section className={styles.btn2}>
               <p>Admin Only: Selecciona un ganador</p>
@@ -66,10 +77,18 @@ export default function Home() {
             </section>
             <section className={styles.infoplayers}>
               <div>
-                <h4>Jugadores (1)</h4>
+                <h4>Jugadores ({jugadores.length})</h4>
               </div>
               <section>
-                <p>0xf5gdfsdfa83saka</p>
+                <ul>
+                  {
+                    (jugadores && jugadores.length > 0) && jugadores.map((jugador, index) => {
+                     return <li key={`${jugador}-${index}`}>
+                        <p>{jugador}</p>
+                      </li>
+                    })
+                  }
+                </ul>
               </section>
             </section>
             <section className={styles.infobote}>
@@ -77,7 +96,7 @@ export default function Home() {
                 <h4>Bote</h4>
               </div>
               <section>
-                <p>{bote}</p>
+                <p>{bote} </p>
               </section>
             </section>
           </section>
