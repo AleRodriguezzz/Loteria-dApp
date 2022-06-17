@@ -2,22 +2,19 @@ import Web3 from 'web3'
 import { useState } from 'react'
 import styles from '../../styles/Home.module.css'
 
-function HeaderComponent(){
+function HeaderComponent(props){
 
-    const [web3, setWeb3] = useState()
-    const [cuentas, setCuentas] = useState()
     const [loggedIn, setLoggedIn] = useState(false)
-
 
     const connectWalletHandler = async () => {
         if(typeof window !== "undefined" && typeof window.ethereum !== "undefined"){
             try{
                 await window.ethereum.request({method: "eth_requestAccounts"})
                 const web3 = new Web3(window.ethereum)
-                setWeb3(web3)
+                props.setWeb3(web3)
                 setLoggedIn(true) 
-                const cuentas = await web3.eth.getAccounts()
-                setCuentas(cuentas[0])
+                const cuenta = await web3.eth.getAccounts()
+                props.setCuentas(cuenta[0])
             }catch(err){
                 console.log(err.message)
             }
@@ -39,7 +36,7 @@ function HeaderComponent(){
             </nav>
             <div>
                 { !loggedIn ? <button onClick={connectWalletHandler}>Conectar Wallet</button>
-                : <p>Bienvenido: {cuentas}</p>}
+                : <p>Bienvenido: {props.cuentas}</p>}
             </div>
       </header>
     )
