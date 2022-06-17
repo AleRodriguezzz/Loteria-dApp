@@ -1,6 +1,7 @@
 import Web3 from 'web3'
 import { useState } from 'react'
 import styles from '../../styles/Home.module.css'
+import localContract from '../../blockchain/loteria'
 
 function HeaderComponent(props){
 
@@ -15,6 +16,8 @@ function HeaderComponent(props){
                 setLoggedIn(true) 
                 const cuenta = await web3.eth.getAccounts()
                 props.setCuentas(cuenta[0])
+                const localContractCopy = localContract(web3)
+                props.setLocalContract(localContractCopy)
             }catch(err){
                 console.log(err.message)
             }
