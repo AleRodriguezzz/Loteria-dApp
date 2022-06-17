@@ -14,14 +14,20 @@ export default function Home() {
   const [cuentas, setCuentas] = useState()
   const [localContract, setLocalContract] = useState()
   const [bote, setBote] = useState()
+  const [jugadores, setJugadores] = useState([])
 
   useEffect(() => {
     if(localContract) getBote()
-  }, [localContract, bote])
+    if(localContract) getJugadores()
+  }, [localContract, bote, jugadores])
 
   const getBote = async () => {
     const bote = await localContract.methods.getBalance().call()
     setBote(bote)
+  } 
+  const getJugadores = async () => {
+    const jugadores = await localContract.methods.getPlayers().call()
+    setJugadores(jugadores)
   }
 
   return (
