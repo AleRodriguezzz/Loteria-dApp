@@ -15,11 +15,18 @@ export default function Home() {
   const [localContract, setLocalContract] = useState()
   const [bote, setBote] = useState()
   const [jugadores, setJugadores] = useState([])
+  const [historialLoteria, setHistorialLoteria] = useState([])
+  const [loteriaId, setLoteriaId] = useState()
 
   useEffect(() => {
+    actualizarEstado()
+  }, [localContract])
+
+  const actualizarEstado = () => {
     if(localContract) getBote()
     if(localContract) getJugadores()
-  }, [localContract])
+    if(localContract) getLoteriaId()
+  }
 
   const getBote = async () => {
     const bote = await localContract.methods.getBalance().call()
@@ -29,6 +36,20 @@ export default function Home() {
     const jugadores = await localContract.methods.getPlayers().call()
     setJugadores(jugadores)
   }
+  const getHistorial = async (id) => {
+    for (let i = parseInt(id); i > 0; i--){
+      const addressGanador = await localContract.methods.lotteryHistory(i).call()
+      const historialObjeto = {}
+      historialObjeto.id = i
+      historialObjeto.address = addressGanador
+      setHistorialLoteria(historialLoteria => [...historialLoteria, historialObjeto])
+    }
+  }
+  const getLoteriaId = async () => {
+    const loteriaId = await localContract.methods.lotteryId().call()
+    setLoteriaId(loteriaId)
+    await getHistorial(loteriaId)
+  }
   const comprarBilleteHandler = async () =>{
     try{
       await localContract.methods.enter().send({
@@ -37,8 +58,32 @@ export default function Home() {
         gas: 300000,
         gasPrice: null
       })
+      actualizarEstado()
     }catch(err) {
       console.log(err.message)
+    }
+  }
+  const elegirGanadorHandler = async () => {
+    try{
+      await localContract.methods.pickWinner().send({
+        from: cuentas,
+        gas: 300000,
+        gasPrice: null
+      })
+    }catch(err) {
+      console.log(err.message)
+    }
+  }
+  const pagarGanadorHandler = async () => {
+    try{
+      await localContract.methods.payWinner().send({
+        from: cuentas,
+        gas: 300000,
+        gasPrice: null
+      })
+      const addressGanador = await localContract.methods.lotteryHistory(loteriaId).call()
+      actualizarEstado()
+    } catch(err) {
     }
   }
   return (
@@ -53,27 +98,30 @@ export default function Home() {
         <section className={styles.content}>
           <section className={styles.botonessm}>
             <section className={styles.btn1}>
-              <p>Compra un boleto por 0.01 Ether</p>
+              <p>Compra un boleto por 0.015 Ether</p>
               <button onClick={comprarBilleteHandler}>Jugar</button>
             </section>
             <section className={styles.btn2}>
               <p>Admin Only: Selecciona un ganador</p>
-              <button>Elegir Ganador</button>
+              <button onClick={elegirGanadorHandler}>Elegir Ganador</button>
             </section>
             <section className={styles.btn3}>
               <p>Admin Only: Pagar al ganador</p>
-              <button>Pagar</button>
+              <button onClick={pagarGanadorHandler}>Pagar</button>
             </section>
           </section>
           <section className={styles.infosm}>
             <section className={styles.infolotto}>
-              <div>
                 <h4>Historial de loterias</h4>
-              </div>
-              <section>
-                <p>Ganador #1</p>
-                <p>0xf5gdfsdfa83saka</p>
-              </section>
+              {
+                (historialLoteria && historialLoteria.length > 0) && historialLoteria.map(item =>{
+                  if(loteriaId != item.id)
+                    return <section key={item.id}>
+                      <p>Ganador #{item.id}</p>
+                      <p>{item.address}</p>
+                    </section>
+                })
+              }
             </section>
             <section className={styles.infoplayers}>
               <div>
