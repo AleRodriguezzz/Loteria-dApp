@@ -1,11 +1,17 @@
 import Web3 from 'web3'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styles from '../../styles/Home.module.css'
 import localContract from '../../blockchain/loteria'
 
 function HeaderComponent(props){
 
     const [loggedIn, setLoggedIn] = useState(false)
+
+    useEffect(() =>{
+        window.ethereum.on('accountsChanged', async () => {
+            window.location.reload()
+        })
+    })
 
     const connectWalletHandler = async () => {
         if(typeof window !== "undefined" && typeof window.ethereum !== "undefined"){
